@@ -1,30 +1,24 @@
 class Solution {
-public:
-int f(int idx, string &s, vector<int>& dp) {
-  
-    if (idx == s.size()) return 1; 
-    if (idx > s.size()) return 0;
-    if (dp[idx] != -1) return dp[idx]; 
-    if (s[idx] == '0') return dp[idx] = 0; 
-    int take1 = f(idx + 1, s, dp); 
-    int take2 = 0;
-    if (idx + 1 < s.size() && (s[idx]=='1' || s[idx]=='2' && s[idx+1]<='6')) {
-            take2 = f(idx + 2, s, dp);
-        
+private:
+    int solve(int i, string& s, vector<int>& memo) {
+        if (i == s.length()) return 1;
+        if (s[i] == '0') return 0;
+        if (memo[i] != -1) return memo[i];
+        int ways = solve(i + 1, s, memo);
+        if (i + 1 < s.length()) {
+            int twoDigitVal = (s[i] - '0') * 10 + (s[i + 1] - '0');
+            if (twoDigitVal >= 10 && twoDigitVal <= 26) {
+                ways += solve(i + 2, s, memo);
+            }
+        }
+        return memo[i] = ways;
     }
-    //  we can write like this 
-//     if (idx + 1 < s.size()) {
-//     int value = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
-//     if (value >= 10 && value <= 26) {
-//         take2 = f(idx + 2, s, dp);
-//     }
-// }
-    return dp[idx] = take1 + take2; 
-}
+
+public:
     int numDecodings(string s) {
-        int n=s.size();
-        vector<int>dp(n+1,-1);
-        int ans=f(0,s,dp);
-        return ans;
+        int n = s.length();
+        if (n == 0) return 0;
+        vector<int> memo(n, -1);
+        return solve(0, s, memo);
     }
 };
