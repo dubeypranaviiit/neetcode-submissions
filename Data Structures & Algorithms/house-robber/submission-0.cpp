@@ -1,16 +1,16 @@
 class Solution {
-public:
-  int ans(int idx,vector<int>&nums,vector<int>&dp){
-   if(idx<0)return 0;
-  if(dp[idx]!=-1) return dp[idx];
-  int nt=ans(idx-1,nums,dp);
-  int ta=ans(idx-2,nums,dp)+nums[idx];
-  return dp[idx]=max(nt,ta);
-  }
+public: 
+    int ans(int idx,vector<int>&nums,vector<int>&dp){
+        if(idx<0)return 0;
+        if(dp[idx]!=-1)return dp[idx];
+        int nt=ans(idx-1,nums,dp);
+       int take=nums[idx]+ans(idx-2,nums,dp);
+        return dp[idx]=max(take,nt);
+    }
     int rob(vector<int>& nums) {
         int n=nums.size();
+        int sum=0;
         vector<int>dp(n+1,-1);
-        int res=ans(n-1,nums,dp);
-        return res;
+        return ans(n-1,nums,dp);
     }
 };
